@@ -4,11 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
+	"time"
 )
 
 func Day1Part2() {
+	startTs := time.Now()
 	file, err := os.Open("../inputs/day-1/part-1/input.txt")
 	if err != nil {
 		fmt.Printf("Error opening file: %v\n", err)
@@ -18,29 +19,33 @@ func Day1Part2() {
 
 	scanner := bufio.NewScanner(file)
 
-	n := 50
-	z := 0
+	position := startPosition
+	crossingsAtZero := 0
+
 	for scanner.Scan() {
-		dir, dist, err := parsePartUnbounded(strings.TrimSpace(scanner.Text()))
+		direction, distance, err := parseLine(strings.TrimSpace(scanner.Text()))
 		if err != nil {
-			fmt.Printf("Error parsing part: %v\n", err)
+			fmt.Printf("Error parsing line: %v\n", err)
 			os.Exit(1)
 		}
 
-		fullRotationsFromDist := dist / 100
-		z += fullRotationsFromDist
-		dist = dist % 100
+		fullRotations := distance / circleSize
+		crossingsAtZero += fullRotations
 
-		passesOverZero := calculatePassesOverZero(dir, n, dist)
-		z += passesOverZero
+		remainingDistance := distance % circleSize
+		additionalCrossings := calculatePassesOverZero(direction, position, remainingDistance)
+		crossingsAtZero += additionalCrossings
 
-		if dir == "L" {
-			n -= dist
-		} else {
-			n += dist
+		switch direction {
+		case "L":
+			position -= remainingDistance
+		case "R":
+			position += remainingDistance
+		default:
+			fmt.Printf("Error parsing line: %v\n", err)
 		}
-		n = ((n % 100) + 100) % 100
 
+		position = wrapPosition(position)
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -48,44 +53,33 @@ func Day1Part2() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Solution: %d\n", z)
+	endTs := time.Now()
+	elapsed := endTs.Sub(startTs)
+	fmt.Printf("Solution: %d [%d(μs)]\n", crossingsAtZero, elapsed.Microseconds())
 }
 
-func calculatePassesOverZero(dir string, startPos int, distance int) int {
+func calculatePassesOverZero(direction string, startPos int, distance int) (numberOfPassesOverZero int) {
 	if distance == 0 {
 		return 0
 	}
 
-	if dir == "R" {
-		distanceToZero := 100 - startPos
+	distanceToZero := 0
+	if direction == "R" {
 		if startPos == 0 {
-			distanceToZero = 100
+			distanceToZero = circleSize
+		} else {
+			distanceToZero = circleSize - startPos
 		}
-		if distance >= distanceToZero {
-			return 1 + (distance-distanceToZero)/100
-		}
-		return 0
 	} else {
-		distanceToZero := startPos
 		if startPos == 0 {
-			distanceToZero = 100
+			distanceToZero = circleSize
+		} else {
+			distanceToZero = startPos
 		}
-		if distance >= distanceToZero {
-			return 1 + (distance-distanceToZero)/100
-		}
-		return 0
-	}
-}
-
-func parsePartUnbounded(part string) (dir string, dist int, err error) {
-	if len(part) < 2 {
-		return "", 0, fmt.Errorf("invalid part: %s", part)
 	}
 
-	dist, err = strconv.Atoi(part[1:])
-	if err != nil {
-		return "", 0, err
+	if distance >= distanceToZero {
+		return 1 + (distance-distanceToZero)/circleSize
 	}
-
-	return part[:1], dist, nil
+	return 0
 }

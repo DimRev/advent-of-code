@@ -51,3 +51,7 @@ ts-d1p1:
 ts-d1p2:
 	$(call print_ts_title,Day 1 Part 2)
 	@cd 2025/ts && pnpm start d1p2
+
+# ALL LANGUAGES
+all-d1p1: go-d1p1 python-d1p1 ts-d1p1
+all-d1p2: go-d1p2 python-d1p2 ts-d1p2

@@ -6,9 +6,16 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
+)
+
+const (
+	circleSize    = 100
+	startPosition = 50
 )
 
 func Day1Part1() {
+	startTs := time.Now()
 	file, err := os.Open("../inputs/day-1/part-1/input.txt")
 	if err != nil {
 		fmt.Printf("Error opening file: %v\n", err)
@@ -18,24 +25,30 @@ func Day1Part1() {
 
 	scanner := bufio.NewScanner(file)
 
-	n := 50
-	z := 0
+	position := startPosition
+	crossingsAtZero := 0
+
 	for scanner.Scan() {
-		dir, dist, err := parsePart(strings.TrimSpace(scanner.Text()))
+		direction, distance, err := parseLine(strings.TrimSpace(scanner.Text()))
 		if err != nil {
-			fmt.Printf("Error parsing part: %v\n", err)
+			fmt.Printf("Error parsing line: %v\n", err)
 			os.Exit(1)
 		}
 
-		if dir == "L" {
-			n -= dist
-		} else {
-			n += dist
+		switch direction {
+		case "L":
+			position -= distance
+		case "R":
+			position += distance
+		default:
+			fmt.Printf("Error parsing line: %v\n", err)
+			os.Exit(1)
 		}
 
-		n = ((n % 100) + 100) % 100
-		if n == 0 {
-			z++
+		position = wrapPosition(position)
+
+		if position == 0 {
+			crossingsAtZero++
 		}
 	}
 
@@ -44,18 +57,24 @@ func Day1Part1() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Solution: %d\n", z)
+	endTs := time.Now()
+	elapsed := endTs.Sub(startTs)
+	fmt.Printf("Solution: %d [%d(μs)]\n", crossingsAtZero, elapsed.Microseconds())
 }
 
-func parsePart(part string) (dir string, dist int, err error) {
-	if len(part) < 2 {
-		return "", 0, fmt.Errorf("invalid part: %s", part)
+func wrapPosition(position int) (wrappedPosition int) {
+	return ((position % circleSize) + circleSize) % circleSize
+}
+
+func parseLine(line string) (direction string, distance int, err error) {
+	if len(line) < 2 {
+		return "", 0, fmt.Errorf("invalid line: %s", line)
 	}
 
-	dist, err = strconv.Atoi(part[1:])
+	distance, err = strconv.Atoi(line[1:])
 	if err != nil {
 		return "", 0, err
 	}
 
-	return part[:1], dist % 100, nil
+	return line[:1], distance, nil
 }
