@@ -35,8 +35,7 @@ function calculatePassesOverZero(direction: string, startPos: number, distance: 
   return distance >= distanceToZero ? Math.floor(1 + (distance - distanceToZero) / CIRCLE_SIZE) : 0;
 }
 
-export async function part2(): Promise<void> {
-  const startTs = performance.now()
+export async function day1Part2(): Promise<void> {
   const fileStream = fs.createReadStream(PATH);
   const rl = readline.createInterface({
     input: fileStream,
@@ -66,9 +65,7 @@ export async function part2(): Promise<void> {
       position = wrapPosition(position);
     }
 
-    const endTs = performance.now()
-    const elapsed = (endTs - startTs) * 1000;
-    console.log(`Solution: ${crossingsAtZero} [${elapsed.toFixed(0)} (μs)]`);
+    console.log(`Solution: ${crossingsAtZero}`);
   } finally {
     rl.close();
   }

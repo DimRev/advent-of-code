@@ -6,7 +6,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 const (
@@ -15,7 +14,6 @@ const (
 )
 
 func Day1Part1() {
-	startTs := time.Now()
 	file, err := os.Open("../inputs/day-1/part-1/input.txt")
 	if err != nil {
 		fmt.Printf("Error opening file: %v\n", err)
@@ -57,9 +55,7 @@ func Day1Part1() {
 		os.Exit(1)
 	}
 
-	endTs := time.Now()
-	elapsed := endTs.Sub(startTs)
-	fmt.Printf("Solution: %d [%d(μs)]\n", crossingsAtZero, elapsed.Microseconds())
+	fmt.Printf("Solution: %d\n", crossingsAtZero)
 }
 
 func wrapPosition(position int) (wrappedPosition int) {

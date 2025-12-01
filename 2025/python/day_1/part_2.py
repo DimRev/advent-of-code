@@ -38,7 +38,6 @@ def calculate_passes_over_zero(direction: str, start_pos: int, distance: int) ->
 def day1_part2() -> None:
     """Calculate total crossings at position 0 for part 2."""
     try:
-        start_ts = time.perf_counter_ns()
         position = START_POSITION
         crossings_at_zero = 0
 
@@ -62,9 +61,7 @@ def day1_part2() -> None:
 
                 position = wrap_position(position)
 
-        end_ts = time.perf_counter_ns()
-        elapsed = (end_ts - start_ts) / 1000
-        print(f"Solution: {crossings_at_zero} [{elapsed} (μs)]")
+        print(f"Solution: {crossings_at_zero}")
 
     except FileNotFoundError:
         print("File not found")

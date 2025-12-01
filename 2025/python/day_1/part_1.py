@@ -23,7 +23,6 @@ def wrap_position(position: int) -> int:
 def day1_part1() -> None:
     """Calculate crossings at position 0 for part 1."""
     try:
-        start_ts = time.perf_counter_ns()
         position = START_POSITION
         crossings_at_zero = 0
 
@@ -41,9 +40,7 @@ def day1_part1() -> None:
                 if position == 0:
                     crossings_at_zero += 1
 
-        end_ts = time.perf_counter_ns()
-        elapsed = (end_ts - start_ts) / 1000
-        print(f"Solution: {crossings_at_zero}  [{elapsed} (μs)]")
+        print(f"Solution: {crossings_at_zero}")
 
     except FileNotFoundError:
         print("File not found")

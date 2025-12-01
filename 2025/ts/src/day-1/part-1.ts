@@ -18,8 +18,7 @@ function wrapPosition(position: number): number {
   return ((position % CIRCLE_SIZE) + CIRCLE_SIZE) % CIRCLE_SIZE;
 }
 
-export async function part1(): Promise<void> {
-  const startTs = performance.now()
+export async function day1Part1(): Promise<void> {
   const fileStream = fs.createReadStream(PATH);
   const rl = readline.createInterface({
     input: fileStream,
@@ -46,9 +45,8 @@ export async function part1(): Promise<void> {
       }
     }
 
-    const endTs = performance.now()
-    const elapsed = (endTs - startTs) * 1000;
-    console.log(`Solution: ${crossingsAtZero} [${elapsed.toFixed(0)} (μs)]`);
+
+    console.log(`Solution: ${crossingsAtZero}`);
   } finally {
     rl.close();
   }

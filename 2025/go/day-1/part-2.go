@@ -5,11 +5,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"time"
 )
 
 func Day1Part2() {
-	startTs := time.Now()
 	file, err := os.Open("../inputs/day-1/part-1/input.txt")
 	if err != nil {
 		fmt.Printf("Error opening file: %v\n", err)
@@ -53,9 +51,7 @@ func Day1Part2() {
 		os.Exit(1)
 	}
 
-	endTs := time.Now()
-	elapsed := endTs.Sub(startTs)
-	fmt.Printf("Solution: %d [%d(μs)]\n", crossingsAtZero, elapsed.Microseconds())
+	fmt.Printf("Solution: %d\n", crossingsAtZero)
 }
 
 func calculatePassesOverZero(direction string, startPos int, distance int) (numberOfPassesOverZero int) {
