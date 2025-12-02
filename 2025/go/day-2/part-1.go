@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func scanCommaSeparated(data []byte, atEOF bool) (advance int, token []byte, err error) {
+func scanCommaSeparatedP1(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	if len(data) == 0 {
 		if atEOF {
 			return 0, nil, nil
@@ -17,7 +17,7 @@ func scanCommaSeparated(data []byte, atEOF bool) (advance int, token []byte, err
 	}
 
 	for i := 0; i < len(data); i++ {
-		if data[i] == ',' {
+		if data[i] == byte(COMMA_SEPARATOR) {
 			return i + 1, data[0:i], nil
 		}
 	}
@@ -29,9 +29,9 @@ func scanCommaSeparated(data []byte, atEOF bool) (advance int, token []byte, err
 	return 0, nil, nil
 }
 
-func parseLine(line string) (minNum int, maxNum int, err error) {
-	nums := strings.Split(line, "-")
-	if len(nums) != 2 {
+func parseLineP1(line string) (minNum int, maxNum int, err error) {
+	nums := strings.Split(line, string(RANGE_SEPARATOR))
+	if len(nums) != EXPECTED_RANGE_PARTS {
 		return 0, 0, fmt.Errorf("invalid line: %s", line)
 	}
 
@@ -48,32 +48,30 @@ func parseLine(line string) (minNum int, maxNum int, err error) {
 	return minNum, maxNum, nil
 }
 
-func checkIfValid(num int) bool {
+func checkIfInvalidP1(num int) bool {
 	numStr := strconv.Itoa(num)
-	freqMap := make(map[string]int)
+	length := len(numStr)
 
-	for i := 0; i < len(numStr); i++ {
-		digit := string(numStr[i])
-		freqMap[digit]++
+	if length%2 != 0 {
+		return false
 	}
 
-	allCountsAreTwo := true
-	for d, c := range freqMap {
-		if c != 2 {
-			allCountsAreTwo = false
-		}
-		fmt.Printf("%s: %d\n", d, c)
+	if numStr[0] == byte(LEADING_ZERO_CHAR) {
+		return false
 	}
-	fmt.Println()
 
-	return !allCountsAreTwo
+	half := length / 2
+	firstHalf := numStr[0:half]
+	secondHalf := numStr[half:]
+
+	return firstHalf == secondHalf
 }
 
-func findInvalidNumsInRange(minNum int, maxNum int) (invalidNums []int) {
+func findInvalidNumsInRangeP1(minNum int, maxNum int) (invalidNums []int) {
 	invalidNums = make([]int, 0)
 
 	for i := minNum; i <= maxNum; i++ {
-		if !checkIfValid(i) {
+		if checkIfInvalidP1(i) {
 			invalidNums = append(invalidNums, i)
 		}
 	}
@@ -81,9 +79,17 @@ func findInvalidNumsInRange(minNum int, maxNum int) (invalidNums []int) {
 	return invalidNums
 }
 
+func sumInvalidNumsListP1(invalidNums []int) int {
+	sum := 0
+	for _, num := range invalidNums {
+		sum += num
+	}
+	return sum
+}
+
 func Day2Part1() {
 	{
-		file, err := os.Open("../inputs/day-2/part-1/example.txt")
+		file, err := os.Open("../inputs/day-2/part-1/input.txt")
 		if err != nil {
 			fmt.Printf("Error opening file: %v\n", err)
 			os.Exit(1)
@@ -91,22 +97,25 @@ func Day2Part1() {
 		defer file.Close()
 
 		scanner := bufio.NewScanner(file)
-		scanner.Split(scanCommaSeparated)
+		scanner.Split(scanCommaSeparatedP1)
 
+		invalidNums := make([]int, 0)
 		for scanner.Scan() {
 			numRange := strings.TrimSpace(scanner.Text())
 			if len(numRange) == 0 {
 				continue
 			}
-			minNum, maxNum, err := parseLine(numRange)
+			minNum, maxNum, err := parseLineP1(numRange)
 			if err != nil {
 				fmt.Printf("Error parsing line: %v\n", err)
 				os.Exit(1)
 			}
-			invalidNums := findInvalidNumsInRange(minNum, maxNum)
+			in := findInvalidNumsInRangeP1(minNum, maxNum)
+			invalidNums = append(invalidNums, in...)
 
-			fmt.Printf("min: %d, max: %d, invalid: %v\n", minNum, maxNum, invalidNums)
 		}
+		solution := sumInvalidNumsListP1(invalidNums)
+		fmt.Printf("Solution: %d\n", solution)
 
 		if err := scanner.Err(); err != nil {
 			fmt.Printf("Error reading file: %v\n", err)

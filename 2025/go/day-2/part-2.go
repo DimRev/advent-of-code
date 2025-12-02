@@ -1,7 +1,141 @@
 package day2
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+)
+
+func scanCommaSeparatedP2(data []byte, atEOF bool) (advance int, token []byte, err error) {
+	if len(data) == 0 {
+		if atEOF {
+			return 0, nil, nil
+		}
+		return 0, nil, nil
+	}
+
+	for i := 0; i < len(data); i++ {
+		if data[i] == ',' {
+			return i + 1, data[0:i], nil
+		}
+	}
+
+	if atEOF {
+		return len(data), data, nil
+	}
+
+	return 0, nil, nil
+}
+
+func parseLineP2(line string) (minNum int, maxNum int, err error) {
+	nums := strings.Split(line, "-")
+	if len(nums) != 2 {
+		return 0, 0, fmt.Errorf("invalid line: %s", line)
+	}
+
+	minNum, err = strconv.Atoi(nums[0])
+	if err != nil {
+		return 0, 0, err
+	}
+
+	maxNum, err = strconv.Atoi(nums[1])
+	if err != nil {
+		return 0, 0, err
+	}
+
+	return minNum, maxNum, nil
+}
+
+func checkIfInvalidP2(num int) bool {
+	numStr := strconv.Itoa(num)
+	length := len(numStr)
+
+	if numStr[0] == byte(LEADING_ZERO_CHAR) {
+		return false
+	}
+
+	maxPatternLen := length / 2
+	for patternLen := MIN_PATTERN_LEN; patternLen <= maxPatternLen; patternLen++ {
+		if length%patternLen != 0 {
+			continue
+		}
+
+		if isRepeatingPattern(numStr, patternLen) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func isRepeatingPattern(numStr string, patternLen int) bool {
+	pattern := numStr[0:patternLen]
+
+	for i := 0; i < len(numStr); i += patternLen {
+		if numStr[i:i+patternLen] != pattern {
+			return false
+		}
+	}
+
+	return true
+}
+
+func findInvalidNumsInRangeP2(minNum int, maxNum int) (invalidNums []int) {
+	invalidNums = make([]int, 0)
+
+	for i := minNum; i <= maxNum; i++ {
+		if checkIfInvalidP2(i) {
+			invalidNums = append(invalidNums, i)
+		}
+	}
+
+	return invalidNums
+}
+
+func sumInvalidNumsListP2(invalidNums []int) int {
+	sum := 0
+	for _, num := range invalidNums {
+		sum += num
+	}
+	return sum
+}
 
 func Day2Part2() {
-	fmt.Println("Hello from Day 2 Part 2")
+	{
+		file, err := os.Open("../inputs/day-2/part-1/input.txt")
+		if err != nil {
+			fmt.Printf("Error opening file: %v\n", err)
+			os.Exit(1)
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		scanner.Split(scanCommaSeparatedP2)
+
+		invalidNums := make([]int, 0)
+		for scanner.Scan() {
+			numRange := strings.TrimSpace(scanner.Text())
+			if len(numRange) == 0 {
+				continue
+			}
+			minNum, maxNum, err := parseLineP2(numRange)
+			if err != nil {
+				fmt.Printf("Error parsing line: %v\n", err)
+				os.Exit(1)
+			}
+			in := findInvalidNumsInRangeP2(minNum, maxNum)
+			invalidNums = append(invalidNums, in...)
+
+		}
+		solution := sumInvalidNumsListP2(invalidNums)
+		fmt.Printf("Solution: %d\n", solution)
+
+		if err := scanner.Err(); err != nil {
+			fmt.Printf("Error reading file: %v\n", err)
+			os.Exit(1)
+		}
+
+	}
 }
