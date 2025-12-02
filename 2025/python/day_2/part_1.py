@@ -1,7 +1,6 @@
 import sys
 from typing import List, Tuple
 
-# Constants
 FILE_PATH = "../inputs/day-2/part-1/input.txt"
 COMMA_SEPARATOR = ','
 RANGE_SEPARATOR = '-'
@@ -16,11 +15,9 @@ def check_if_invalid_p1(num: int) -> bool:
     num_str = str(num)
     length = len(num_str)
 
-    # Invalid IDs must have even length
     if length % 2 != 0:
         return False
 
-    # No leading zeros allowed
     if num_str[0] == LEADING_ZERO_CHAR:
         return False
 
@@ -56,7 +53,6 @@ def day2_part1() -> None:
         solution = 0
         with open(FILE_PATH, "r") as f:
             for line in f:
-                # Split by comma separator
                 ranges = [r.strip() for r in line.strip().split(COMMA_SEPARATOR) if r.strip()]
                 for range_str in ranges:
                     min_num, max_num = parse_line_p1(range_str)

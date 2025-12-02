@@ -1,7 +1,6 @@
 import sys
 from typing import List, Tuple
 
-# Constants
 FILE_PATH = "../inputs/day-2/part-1/input.txt"
 COMMA_SEPARATOR = ','
 RANGE_SEPARATOR = '-'
@@ -26,14 +25,12 @@ def check_if_invalid_p2(num: int) -> bool:
     num_str = str(num)
     length = len(num_str)
 
-    # No leading zeros allowed
     if num_str[0] == LEADING_ZERO_CHAR:
         return False
 
-    # Try all possible pattern lengths from 1 to half the number length
+
     max_pattern_len = length // 2
     for pattern_len in range(MIN_PATTERN_LEN, max_pattern_len + 1):
-        # Pattern length must divide evenly into total length
         if length % pattern_len != 0:
             continue
 
