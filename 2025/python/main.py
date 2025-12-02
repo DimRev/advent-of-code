@@ -5,13 +5,15 @@ from typing import Callable, Dict
 
 from day_1 import day1_part1, day1_part2
 from day_2 import day2_part1, day2_part2
-
+from day_3 import day3_part1, day3_part2
 
 class Command(str, Enum):
     D1P1 = "d1p1"
     D1P2 = "d1p2"
     D2P1 = "d2p1"
     D2P2 = "d2p2"
+    D3P1 = "d3p1"
+    D3P2 = "d3p2"
 
 
 CMD_MAP: Dict[Command, Callable[[], None]] = {
@@ -19,6 +21,8 @@ CMD_MAP: Dict[Command, Callable[[], None]] = {
     Command.D1P2: day1_part2,
     Command.D2P1: day2_part1,
     Command.D2P2: day2_part2,
+    Command.D3P1: day3_part1,
+    Command.D3P2: day3_part2,
 }
 
 

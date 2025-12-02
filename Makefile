@@ -26,6 +26,7 @@ define print_ts_title
 endef
 
 # ------------- PYTHON -------------
+# Day 1
 python-d1p1:
 	$(call print_py_title,Day 1 Part 1)
 	@cd 2025/python && python main.py d1p1
@@ -34,6 +35,7 @@ python-d1p2:
 	$(call print_py_title,Day 1 Part 2)
 	@cd 2025/python && python main.py d1p2
 
+# Day 2
 python-d2p1:
 	$(call print_py_title,Day 2 Part 1)
 	@cd 2025/python && python main.py d2p1
@@ -42,7 +44,20 @@ python-d2p2:
 	$(call print_py_title,Day 2 Part 2)
 	@cd 2025/python && python main.py d2p2
 
+# Day 3
+python-d3p1:
+	$(call print_py_title,Day 3 Part 1)
+	@cd 2025/python && python main.py d3p1
+
+python-d3p2:
+	$(call print_py_title,Day 3 Part 2)
+	@cd 2025/python && python main.py d3p2
+
+# All Days
+python-all: python-d1p1 python-d1p2 python-d2p1 python-d2p2 python-d3p1 python-d3p2
+
 # ------------- GO -------------
+# Day 1
 go-d1p1:
 	$(call print_go_title,Day 1 Part 1)
 	@cd 2025/go && go run main.go d1p1
@@ -51,6 +66,7 @@ go-d1p2:
 	$(call print_go_title,Day 1 Part 2)
 	@cd 2025/go && go run main.go d1p2
 
+# Day 2
 go-d2p1:
 	$(call print_go_title,Day 2 Part 1)
 	@cd 2025/go && go run main.go d2p1
@@ -59,7 +75,20 @@ go-d2p2:
 	$(call print_go_title,Day 2 Part 2)
 	@cd 2025/go && go run main.go d2p2
 
+# Day 3
+go-d3p1:
+	$(call print_go_title,Day 3 Part 1)
+	@cd 2025/go && go run main.go d3p1
+
+go-d3p2:
+	$(call print_go_title,Day 3 Part 2)
+	@cd 2025/go && go run main.go d3p2
+
+# All Days
+go-all: go-d1p1 go-d1p2 go-d2p1 go-d2p2 go-d3p1 go-d3p2
+
 # ------------- TYPESCRIPT -------------
+# Day 1
 ts-d1p1:
 	$(call print_ts_title,Day 1 Part 1)
 	@cd 2025/ts && pnpm start d1p1
@@ -68,6 +97,7 @@ ts-d1p2:
 	$(call print_ts_title,Day 1 Part 2)
 	@cd 2025/ts && pnpm start d1p2
 
+# Day 2
 ts-d2p1:
 	$(call print_ts_title,Day 2 Part 1)
 	@cd 2025/ts && pnpm start d2p1
@@ -75,9 +105,30 @@ ts-d2p1:
 ts-d2p2:
 	$(call print_ts_title,Day 2 Part 2)
 	@cd 2025/ts && pnpm start d2p2
+# Day 3
+ts-d3p1:
+	$(call print_ts_title,Day 3 Part 1)
+	@cd 2025/ts && pnpm start d3p1
 
-# ALL LANGUAGES
+ts-d3p2:
+	$(call print_ts_title,Day 3 Part 2)
+	@cd 2025/ts && pnpm start d3p2
+
+# All Days
+ts-all: ts-d1p1 ts-d1p2 ts-d2p1 ts-d2p2 ts-d3p1 ts-d3p2
+
+# ------------- ALL LANGUAGES -------------
+# Day 1
 all-d1p1: go-d1p1 python-d1p1 ts-d1p1
 all-d1p2: go-d1p2 python-d1p2 ts-d1p2
+
+# Day 2
 all-d2p1: go-d2p1 python-d2p1 ts-d2p1
 all-d2p2: go-d2p2 python-d2p2 ts-d2p2
+
+# Day 3
+all-d3p1: go-d3p1 python-d3p1 ts-d3p1
+all-d3p2: go-d3p2 python-d3p2 ts-d3p2
+
+# All Days
+all-all: go-all python-all ts-all

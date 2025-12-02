@@ -1,7 +1,8 @@
 import { day1Part1, day1Part2 } from "./day-1";
 import { day2Part1, day2Part2 } from "./day-2";
+import { day3Part1, day3Part2} from "./day-3";
 
-const commands = ["d1p1", "d1p2", "d2p1", "d2p2"] as const;
+const commands = ["d1p1", "d1p2", "d2p1", "d2p2", "d3p1", "d3p2"] as const;
 type Cmds = typeof commands[number];
 type CmdMap = { [key in Cmds]: () => Promise<void> };
 
@@ -10,6 +11,8 @@ const cmdMap: CmdMap = {
   d1p2: day1Part2,
   d2p1: day2Part1,
   d2p2: day2Part2,
+  d3p1: day3Part1,
+  d3p2: day3Part2,
 };
 
 async function main(): Promise<void> {
