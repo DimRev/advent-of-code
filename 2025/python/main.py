@@ -1,18 +1,24 @@
 import sys
+import time
 from enum import Enum
 from typing import Callable, Dict
 
 from day_1 import day1_part1, day1_part2
+from day_2 import day2_part1, day2_part2
 
 
 class Command(str, Enum):
     D1P1 = "d1p1"
     D1P2 = "d1p2"
+    D2P1 = "d2p1"
+    D2P2 = "d2p2"
 
 
 CMD_MAP: Dict[Command, Callable[[], None]] = {
     Command.D1P1: day1_part1,
     Command.D1P2: day1_part2,
+    Command.D2P1: day2_part1,
+    Command.D2P2: day2_part2,
 }
 
 
@@ -35,7 +41,11 @@ def main():
             print(f"\t- {cmd_enum.value}")
         sys.exit(1)
 
+    start_ts = time.perf_counter_ns()
     CMD_MAP[cmd]()
+    end_ts = time.perf_counter_ns()
+    elapsed = (end_ts - start_ts) / 1000
+    print(f"Finished running {cmd_str} in {elapsed} (μs)")
 
 
 if __name__ == "__main__":

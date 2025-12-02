@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	day1 "github.com/DimRev/advent-of-code/day-1"
+	day2 "github.com/DimRev/advent-of-code/day-2"
 )
 
 type Command string
@@ -12,6 +14,9 @@ type Command string
 const (
 	D1P1 Command = "d1p1"
 	D1P2 Command = "d1p2"
+
+	D2P1 Command = "d2p1"
+	D2P2 Command = "d2p2"
 )
 
 var commands = []Command{D1P1, D1P2}
@@ -19,6 +24,9 @@ var commands = []Command{D1P1, D1P2}
 var cmdMap = map[Command]func(){
 	D1P1: day1.Day1Part1,
 	D1P2: day1.Day1Part2,
+
+	D2P1: day2.Day2Part1,
+	D2P2: day2.Day2Part2,
 }
 
 func main() {
@@ -43,5 +51,9 @@ func main() {
 		os.Exit(1)
 	}
 
+	startTs := time.Now()
 	cmdMap[cmd]()
+	endTs := time.Now()
+	elapsed := endTs.Sub(startTs)
+	fmt.Printf("Finished running %s in %d(μs)\n", cmdStr, elapsed.Microseconds())
 }

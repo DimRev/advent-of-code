@@ -34,6 +34,14 @@ python-d1p2:
 	$(call print_py_title,Day 1 Part 2)
 	@cd 2025/python && python main.py d1p2
 
+python-d2p1:
+	$(call print_py_title,Day 2 Part 1)
+	@cd 2025/python && python main.py d2p1
+
+python-d2p2:
+	$(call print_py_title,Day 2 Part 2)
+	@cd 2025/python && python main.py d2p2
+
 # ------------- GO -------------
 go-d1p1:
 	$(call print_go_title,Day 1 Part 1)
@@ -43,6 +51,14 @@ go-d1p2:
 	$(call print_go_title,Day 1 Part 2)
 	@cd 2025/go && go run main.go d1p2
 
+go-d2p1:
+	$(call print_go_title,Day 2 Part 1)
+	@cd 2025/go && go run main.go d2p1
+
+go-d2p2:
+	$(call print_go_title,Day 2 Part 2)
+	@cd 2025/go && go run main.go d2p2
+
 # ------------- TYPESCRIPT -------------
 ts-d1p1:
 	$(call print_ts_title,Day 1 Part 1)
@@ -51,3 +67,17 @@ ts-d1p1:
 ts-d1p2:
 	$(call print_ts_title,Day 1 Part 2)
 	@cd 2025/ts && pnpm start d1p2
+
+ts-d2p1:
+	$(call print_ts_title,Day 2 Part 1)
+	@cd 2025/ts && pnpm start d2p1
+
+ts-d2p2:
+	$(call print_ts_title,Day 2 Part 2)
+	@cd 2025/ts && pnpm start d2p2
+
+# ALL LANGUAGES
+all-d1p1: go-d1p1 python-d1p1 ts-d1p1
+all-d1p2: go-d1p2 python-d1p2 ts-d1p2
+all-d2p1: go-d2p1 python-d2p1 ts-d2p1
+all-d2p2: go-d2p2 python-d2p2 ts-d2p2
