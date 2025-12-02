@@ -8,6 +8,7 @@ import (
 	day1 "github.com/DimRev/advent-of-code/day-1"
 	day2 "github.com/DimRev/advent-of-code/day-2"
 	day3 "github.com/DimRev/advent-of-code/day-3"
+	"github.com/DimRev/advent-of-code/lib"
 )
 
 type Command string
@@ -63,4 +64,9 @@ func main() {
 	endTs := time.Now()
 	elapsed := endTs.Sub(startTs)
 	fmt.Printf("Finished running %s in %d(μs)\n", cmdStr, elapsed.Microseconds())
+
+	err := lib.PopulateRenderer(cmdStr, int(elapsed.Microseconds()))
+	if err != nil {
+		fmt.Printf("Error populating renderer: %v\n", err)
+	}
 }

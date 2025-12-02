@@ -6,6 +6,7 @@ from typing import Callable, Dict
 from day_1 import day1_part1, day1_part2
 from day_2 import day2_part1, day2_part2
 from day_3 import day3_part1, day3_part2
+from utils import populate_renderer
 
 class Command(str, Enum):
     D1P1 = "d1p1"
@@ -50,7 +51,7 @@ def main():
     end_ts = time.perf_counter_ns()
     elapsed = (end_ts - start_ts) / 1000
     print(f"Finished running {cmd_str} in {elapsed} (μs)")
-
+    populate_renderer(cmd_str, elapsed)
 
 if __name__ == "__main__":
     main()

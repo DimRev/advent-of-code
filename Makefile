@@ -117,18 +117,28 @@ ts-d3p2:
 # All Days
 ts-all: ts-d1p1 ts-d1p2 ts-d2p1 ts-d2p2 ts-d3p1 ts-d3p2
 
+# ------------- RENDER -------------
+render-render:
+	@cd 2025/render && go run main.go render
+
+render-init:
+	@cd 2025/render && go run main.go init
+
 # ------------- ALL LANGUAGES -------------
 # Day 1
-all-d1p1: go-d1p1 python-d1p1 ts-d1p1
-all-d1p2: go-d1p2 python-d1p2 ts-d1p2
+all-d1p1: render-init go-d1p1 python-d1p1 ts-d1p1 render-render
+all-d1p2: render-init go-d1p2 python-d1p2 ts-d1p2 render-render
+all-d1: render-init go-d1p1 go-d1p2 python-d1p1 python-d1p2 ts-d1p1 ts-d1p2 render-render
 
 # Day 2
-all-d2p1: go-d2p1 python-d2p1 ts-d2p1
-all-d2p2: go-d2p2 python-d2p2 ts-d2p2
+all-d2p1: render-init go-d2p1 python-d2p1 ts-d2p1 render-render
+all-d2p2: render-init go-d2p2 python-d2p2 ts-d2p2 render-render
+all-d2: render-init go-d2p1 go-d2p2 python-d2p1 python-d2p2 ts-d2p1 ts-d2p2 render-render
 
 # Day 3
-all-d3p1: go-d3p1 python-d3p1 ts-d3p1
-all-d3p2: go-d3p2 python-d3p2 ts-d3p2
+all-d3p1: render-init go-d3p1 python-d3p1 ts-d3p1 render-render
+all-d3p2: render-init go-d3p2 python-d3p2 ts-d3p2 render-render
+all-d3: render-init go-d3p1 go-d3p2 python-d3p1 python-d3p2 ts-d3p1 ts-d3p2 render-render
 
 # All Days
-all-all: go-all python-all ts-all
+all-all: render-init go-all python-all ts-all render-render
