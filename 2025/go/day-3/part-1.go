@@ -8,15 +8,22 @@ import (
 	"strings"
 )
 
+const (
+	FILE_PATH = "../inputs/day-3/part-1/input.txt"
+)
+
+func parseDigit(b byte) (int, error) {
+	return strconv.Atoi(string(b))
+}
+
 func maxPairD1(line string) int {
 	firstMaxDigit := -1
 	firstMaxDigitIndex := -1
 
 	for i := 0; i < len(line)-1; i++ {
-		numStr := line[i]
-		num, err := strconv.Atoi(string(numStr))
+		num, err := parseDigit(line[i])
 		if err != nil {
-			fmt.Printf("Error parsing line: %v\n", err)
+			fmt.Printf("Error parsing digit: %v\n", err)
 			os.Exit(1)
 		}
 		if num > firstMaxDigit {
@@ -28,10 +35,9 @@ func maxPairD1(line string) int {
 	secondMaxDigit := -1
 
 	for i := firstMaxDigitIndex + 1; i < len(line); i++ {
-		numStr := line[i]
-		num, err := strconv.Atoi(string(numStr))
+		num, err := parseDigit(line[i])
 		if err != nil {
-			fmt.Printf("Error parsing line: %v\n", err)
+			fmt.Printf("Error parsing digit: %v\n", err)
 			os.Exit(1)
 		}
 		if num > secondMaxDigit {
@@ -43,7 +49,7 @@ func maxPairD1(line string) int {
 }
 
 func Day3Part1() {
-	file, err := os.Open("../inputs/day-3/part-1/input.txt")
+	file, err := os.Open(FILE_PATH)
 	if err != nil {
 		fmt.Printf("Error opening file: %v\n", err)
 		os.Exit(1)
@@ -62,7 +68,6 @@ func Day3Part1() {
 
 		maxPair := maxPairD1(line)
 		pairSum += maxPair
-		fmt.Printf("Line: %s, Max Pair: %d\n", line, maxPair)
 	}
 
 	if err := scanner.Err(); err != nil {

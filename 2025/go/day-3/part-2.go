@@ -4,46 +4,40 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 )
 
+const (
+	MAX_DIGITS = 12
+)
+
 func maxPairD2(line string) int {
-	firstMaxDigit := -1
-	firstMaxDigitIndex := -1
+	maxIdx := -1
+	result := 0
 
-	for i := 0; i < len(line)-1; i++ {
-		numStr := line[i]
-		num, err := strconv.Atoi(string(numStr))
-		if err != nil {
-			fmt.Printf("Error parsing line: %v\n", err)
-			os.Exit(1)
+	for digitPos := MAX_DIGITS - 1; digitPos >= 0; digitPos-- {
+		maxDigit := -1
+
+		for i := maxIdx + 1; i < len(line)-digitPos; i++ {
+			num, err := parseDigit(line[i])
+			if err != nil {
+				fmt.Printf("Error parsing digit: %v\n", err)
+				os.Exit(1)
+			}
+			if num > maxDigit {
+				maxDigit = num
+				maxIdx = i
+			}
 		}
-		if num > firstMaxDigit {
-			firstMaxDigit = num
-			firstMaxDigitIndex = i
-		}
+
+		result = result*10 + maxDigit
 	}
 
-	secondMaxDigit := -1
-
-	for i := firstMaxDigitIndex + 1; i < len(line); i++ {
-		numStr := line[i]
-		num, err := strconv.Atoi(string(numStr))
-		if err != nil {
-			fmt.Printf("Error parsing line: %v\n", err)
-			os.Exit(1)
-		}
-		if num > secondMaxDigit {
-			secondMaxDigit = num
-		}
-	}
-
-	return (firstMaxDigit * 10) + secondMaxDigit
+	return result
 }
 
 func Day3Part2() {
-	file, err := os.Open("../inputs/day-3/part-1/example.txt")
+	file, err := os.Open("../inputs/day-3/part-1/input.txt")
 	if err != nil {
 		fmt.Printf("Error opening file: %v\n", err)
 		os.Exit(1)
@@ -62,7 +56,6 @@ func Day3Part2() {
 
 		maxPair := maxPairD2(line)
 		pairSum += maxPair
-		fmt.Printf("Line: %s, Max Pair: %d\n", line, maxPair)
 	}
 
 	if err := scanner.Err(); err != nil {
