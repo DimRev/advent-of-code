@@ -103,39 +103,38 @@ func sumInvalidNumsListP2(invalidNums []int) int {
 }
 
 func Day2Part2() {
-	{
-		file, err := os.Open("../inputs/day-2/part-1/input.txt")
+
+	file, err := os.Open("../inputs/day-2/part-1/input.txt")
+	if err != nil {
+		fmt.Printf("Error opening file: %v\n", err)
+		os.Exit(1)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(scanCommaSeparatedP2)
+
+	invalidNums := make([]int, 0)
+	for scanner.Scan() {
+		numRange := strings.TrimSpace(scanner.Text())
+		if len(numRange) == 0 {
+			continue
+		}
+		minNum, maxNum, err := parseLineP2(numRange)
 		if err != nil {
-			fmt.Printf("Error opening file: %v\n", err)
+			fmt.Printf("Error parsing line: %v\n", err)
 			os.Exit(1)
 		}
-		defer file.Close()
-
-		scanner := bufio.NewScanner(file)
-		scanner.Split(scanCommaSeparatedP2)
-
-		invalidNums := make([]int, 0)
-		for scanner.Scan() {
-			numRange := strings.TrimSpace(scanner.Text())
-			if len(numRange) == 0 {
-				continue
-			}
-			minNum, maxNum, err := parseLineP2(numRange)
-			if err != nil {
-				fmt.Printf("Error parsing line: %v\n", err)
-				os.Exit(1)
-			}
-			in := findInvalidNumsInRangeP2(minNum, maxNum)
-			invalidNums = append(invalidNums, in...)
-
-		}
-		solution := sumInvalidNumsListP2(invalidNums)
-		fmt.Printf("Solution: %d\n", solution)
-
-		if err := scanner.Err(); err != nil {
-			fmt.Printf("Error reading file: %v\n", err)
-			os.Exit(1)
-		}
+		in := findInvalidNumsInRangeP2(minNum, maxNum)
+		invalidNums = append(invalidNums, in...)
 
 	}
+	solution := sumInvalidNumsListP2(invalidNums)
+	fmt.Printf("Solution: %d\n", solution)
+
+	if err := scanner.Err(); err != nil {
+		fmt.Printf("Error reading file: %v\n", err)
+		os.Exit(1)
+	}
+
 }
