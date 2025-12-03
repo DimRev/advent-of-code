@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strings"
 )
 
 type Data struct {
@@ -77,6 +78,14 @@ func formatNumberWithCommas(num string) string {
 		result += string(digit)
 	}
 	return result
+}
+
+func padCell(content string, width int) string {
+	return fmt.Sprintf(" %-*s|", width-2, content)
+}
+
+func padSeparator(width int) string {
+	return fmt.Sprintf("%s|", strings.Repeat("-", width-1))
 }
 
 func populateData(lang, dayPart string, value int) error {
@@ -169,20 +178,50 @@ func renderData() error {
 
 	fmt.Println()
 	fmt.Println()
-	fmt.Print("Day/Part    ")
+	fmt.Print(padCell("Day/Part", 14))
 	for _, lang := range languages {
-		fmt.Printf("%-20s", lang.name)
+		fmt.Print(padCell(lang.name, 19))
 	}
+	fmt.Print(padCell("Analytics", 50))
 	fmt.Println()
 
-	fmt.Print("------------")
+	fmt.Print(padSeparator(14))
 	for range languages {
-		fmt.Print("--------------------")
+		fmt.Print(padSeparator(19))
 	}
+	fmt.Print(padSeparator(50))
 	fmt.Println()
 
 	for _, col := range sortedColumns {
-		fmt.Printf("%-12s", col)
+		fmt.Print(padCell(col, 14))
+
+		// Collect numeric values for analytics
+		var values []float64
+		for _, lang := range languages {
+			value := lang.data[col]
+			var numVal float64
+			switch v := value.(type) {
+			case float64:
+				numVal = v
+			case int:
+				numVal = float64(v)
+			default:
+				numVal = -1
+			}
+			values = append(values, numVal)
+		}
+
+		// Find minimum value (fastest)
+		minVal := values[0]
+		if minVal > 0 {
+			for _, v := range values[1:] {
+				if v > 0 && v < minVal {
+					minVal = v
+				}
+			}
+		}
+
+		// Print values
 		for _, lang := range languages {
 			value := lang.data[col]
 			var formatted string
@@ -195,8 +234,30 @@ func renderData() error {
 				formatted = fmt.Sprintf("%v", v)
 			}
 			formatted = formatNumberWithCommas(formatted)
-			fmt.Printf("%-20s", formatted)
+			fmt.Print(padCell(formatted, 19))
 		}
+
+		// Print analytics
+		var analytics string
+		if minVal > 0 {
+			parts := []string{}
+			for i, lang := range languages {
+				if values[i] > 0 {
+					ratio := values[i] / minVal
+					parts = append(parts, fmt.Sprintf("%s(%.2fx)", lang.name, ratio))
+				}
+			}
+			analytics = ""
+			for i, part := range parts {
+				if i > 0 {
+					analytics += " "
+				}
+				analytics += fmt.Sprintf("%-12s", part)
+			}
+		} else {
+			analytics = "N/A"
+		}
+		fmt.Print(padCell(analytics, 50))
 		fmt.Println()
 	}
 
