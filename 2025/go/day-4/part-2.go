@@ -8,29 +8,29 @@ import (
 )
 
 const (
-	FILE_PATH_P2 = "../inputs/day-4/part-1/temp.txt"
+	FILE_PATH_P2 = "../inputs/day-4/part-1/input.txt"
 )
 
 func checkNeighborsP2(lines []string, i, j int) (neighborCount int) {
 	min_i := 0
 	max_i := len(lines) - 1
 	min_j := 0
-	max_j := len(lines[0]) - 1
 	neighborCount = 0
 
 	for y := i - 1; y <= i+1; y++ {
 		if y < min_i || y > max_i {
 			continue
 		}
+		max_j_y := len(lines[y]) - 1
 		for x := j - 1; x <= j+1; x++ {
-			if x < min_j || x > max_j {
+			if x < min_j || x > max_j_y {
 				continue
 			}
 			if y == i && x == j {
 				continue
 			}
 
-			if lines[y][x] == '@' || lines[y][x] == 'x' {
+			if lines[y][x] == '@' {
 				neighborCount++
 			}
 
@@ -40,30 +40,35 @@ func checkNeighborsP2(lines []string, i, j int) (neighborCount int) {
 	return neighborCount
 }
 
-func checkLineP2(lines []string, checkIdx int) (int, string) {
+func checkLineP2(lines []string) (int, []string) {
 	canAccessCount := 0
-	for i := 0; i < len(lines); i++ {
-		if i != checkIdx {
-			continue
-		}
+	copy := make([]string, len(lines))
+	for i := range lines {
+		copy[i] = lines[i]
+	}
+
+	toRemove := make(map[[2]int]bool)
+	for i := range lines {
 		for j := 0; j < len(lines[i]); j++ {
 			if lines[i][j] != '@' {
 				continue
 			}
 			neighborsCount := checkNeighborsP2(lines, i, j)
-
 			if neighborsCount < 4 {
-				lineBytes := []byte(lines[i])
-				lineBytes[j] = 'x'
-				lines[i] = string(lineBytes)
+				toRemove[[2]int{i, j}] = true
 				canAccessCount++
 			}
 		}
 	}
 
-	fmt.Printf("%v\n", lines[checkIdx])
+	for pos := range toRemove {
+		i, j := pos[0], pos[1]
+		lineBytes := []byte(copy[i])
+		lineBytes[j] = 'x'
+		copy[i] = string(lineBytes)
+	}
 
-	return canAccessCount, lines[checkIdx]
+	return canAccessCount, copy
 }
 
 func Day4Part2() {
@@ -76,31 +81,34 @@ func Day4Part2() {
 
 	scanner := bufio.NewScanner(file)
 
-	validCount := 0
-
 	lines := make([]string, 0)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 		lines = append(lines, line)
-		if len(lines) == 2 {
-			c, _ := checkLineP2(lines, 0)
-			validCount += c
-		}
-
-		if len(lines) == 3 {
-			c, _ := checkLineP2(lines, 1)
-			validCount += c
-			lines = lines[1:]
-		}
 	}
 
-	c, _ := checkLineP2(lines, 1)
-	validCount += c
+	var filteredLines []string
+	for _, line := range lines {
+		if line != "" {
+			filteredLines = append(filteredLines, line)
+		}
+	}
+	lines = filteredLines
+
+	totalRemoved := 0
+	for {
+		validCount, newLines := checkLineP2(lines)
+		if validCount == 0 {
+			break
+		}
+		totalRemoved += validCount
+		lines = newLines
+	}
 
 	if err := scanner.Err(); err != nil {
 		fmt.Printf("Error reading file: %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Printf("Solution: %d\n", validCount)
+	fmt.Printf("Solution: %d\n", totalRemoved)
 }
