@@ -62,8 +62,17 @@ python-d4p2:
 	$(call print_py_title,Day 4 Part 2)
 	@cd 2025/python && python main.py d4p2
 
+# Day 5
+python-d5p1:
+	$(call print_py_title,Day 5 Part 1)
+	@cd 2025/python && python main.py d5p1
+
+python-d5p2:
+	$(call print_py_title,Day 5 Part 2)
+	@cd 2025/python && python main.py d5p2
+
 # All Days
-python-all: python-d1p1 python-d1p2 python-d2p1 python-d2p2 python-d3p1 python-d3p2 python-d4p1 python-d4p2
+python-all: python-d1p1 python-d1p2 python-d2p1 python-d2p2 python-d3p1 python-d3p2 python-d4p1 python-d4p2 python-d5p1 python-d5p2
 
 # ------------- GO -------------
 # Day 1
@@ -102,8 +111,17 @@ go-d4p2:
 	$(call print_go_title,Day 4 Part 2)
 	@cd 2025/go && go run main.go d4p2
 
+# Day 5
+go-d5p1:
+	$(call print_go_title,Day 5 Part 1)
+	@cd 2025/go && go run main.go d5p1
+
+go-d5p2:
+	$(call print_go_title,Day 5 Part 2)
+	@cd 2025/go && go run main.go d5p2
+
 # All Days
-go-all: go-d1p1 go-d1p2 go-d2p1 go-d2p2 go-d3p1 go-d3p2 go-d4p1 go-d4p2
+go-all: go-d1p1 go-d1p2 go-d2p1 go-d2p2 go-d3p1 go-d3p2 go-d4p1 go-d4p2 go-d5p1 go-d5p2
 
 # ------------- TYPESCRIPT -------------
 # Day 1
@@ -142,8 +160,17 @@ ts-d4p2:
 	$(call print_ts_title,Day 4 Part 2)
 	@cd 2025/ts && pnpm start d4p2
 
+# Day 5
+ts-d5p1:
+	$(call print_ts_title,Day 5 Part 1)
+	@cd 2025/ts && pnpm start d5p1
+
+ts-d5p2:
+	$(call print_ts_title,Day 5 Part 2)
+	@cd 2025/ts && pnpm start d5p2
+
 # All Days
-ts-all: ts-d1p1 ts-d1p2 ts-d2p1 ts-d2p2 ts-d3p1 ts-d3p2 ts-d4p1 ts-d4p2
+ts-all: ts-d1p1 ts-d1p2 ts-d2p1 ts-d2p2 ts-d3p1 ts-d3p2 ts-d4p1 ts-d4p2 ts-d5p1 ts-d5p2
 
 # ------------- RENDER -------------
 render-render:
@@ -172,6 +199,11 @@ all-d3: render-init go-d3p1 go-d3p2 python-d3p1 python-d3p2 ts-d3p1 ts-d3p2 rend
 all-d4p1: render-init go-d4p1 python-d4p1 ts-d4p1 render-render
 all-d4p2: render-init go-d4p2 python-d4p2 ts-d4p2 render-render
 all-d4: render-init go-d4p1 go-d4p2 python-d4p1 python-d4p2 ts-d4p1 ts-d4p2 render-render
+
+# Day 5
+all-d5p1: render-init go-d5p1 python-d5p1 ts-d5p1 render-render
+all-d5p2: render-init go-d5p2 python-d5p2 ts-d5p2 render-render
+all-d5: render-init go-d5p1 go-d5p2 python-d5p1 python-d5p2 ts-d5p1 ts-d5p2 render-render
 
 # All Days
 all-all: render-init go-all python-all ts-all render-render

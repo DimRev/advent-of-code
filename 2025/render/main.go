@@ -27,6 +27,7 @@ var dayParts = []string{
 	"d2p1", "d2p2",
 	"d3p1", "d3p2",
 	"d4p1", "d4p2",
+	"d5p1", "d5p2",
 }
 
 func initData() error {
