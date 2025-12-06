@@ -3,6 +3,7 @@ import { day2Part1, day2Part2 } from "./day-2";
 import { day3Part1, day3Part2 } from "./day-3";
 import { day4Part1, day4Part2 } from "./day-4";
 import { day5Part1, day5Part2 } from "./day-5";
+import { day6Part1, day6Part2 } from "./day-6";
 import { PopulateRenderer } from "./lib/renderer";
 
 const commands = [
@@ -11,6 +12,7 @@ const commands = [
   "d3p1", "d3p2",
   "d4p1", "d4p2",
   "d5p1", "d5p2",
+  "d6p1", "d6p2",
 ] as const;
 type Cmds = typeof commands[number];
 type CmdMap = { [key in Cmds]: () => Promise<void> };
@@ -26,6 +28,8 @@ const cmdMap: CmdMap = {
   d4p2: day4Part2,
   d5p1: day5Part1,
   d5p2: day5Part2,
+  d6p1: day6Part1,
+  d6p2: day6Part2,
 };
 
 async function main(): Promise<void> {

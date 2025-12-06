@@ -8,6 +8,7 @@ from day_2 import day2_part1, day2_part2
 from day_3 import day3_part1, day3_part2
 from day_4 import day4_part1, day4_part2
 from day_5 import day5_part1, day5_part2
+from day_6 import day6_part1, day6_part2
 from utils import populate_renderer
 
 class Command(str, Enum):
@@ -21,6 +22,8 @@ class Command(str, Enum):
     D4P2 = "d4p2"
     D5P1 = "d5p1"
     D5P2 = "d5p2"
+    D6P1 = "d6p1"
+    D6P2 = "d6p2"
 
 
 CMD_MAP: Dict[Command, Callable[[], None]] = {
@@ -34,6 +37,8 @@ CMD_MAP: Dict[Command, Callable[[], None]] = {
     Command.D4P2: day4_part2,
     Command.D5P1: day5_part1,
     Command.D5P2: day5_part2,
+    Command.D6P1: day6_part1,
+    Command.D6P2: day6_part2,
 }
 
 
