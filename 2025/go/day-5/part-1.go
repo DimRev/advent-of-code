@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -12,122 +13,32 @@ const (
 	FILE_PATH = "../inputs/day-5/part-1/input.txt"
 )
 
-func formatRange(rangeStr string) (startRange, endRange int, err error) {
-	split := strings.Split(rangeStr, "-")
-	if len(split) != 2 {
-		err = fmt.Errorf("invalid range format: %s", rangeStr)
-		return
-	}
-
-	startRange, err = strconv.Atoi(split[0])
-	if err != nil {
-		return
-	}
-
-	endRange, err = strconv.Atoi(split[1])
-	if err != nil {
-		return
-	}
-	return startRange, endRange, nil
+type Range struct {
+	Start, End int
 }
 
-func sortedInsertRange(ranges []string, rangeToInsert string) ([]string, error) {
-	if len(ranges) == 0 {
-		return []string{rangeToInsert}, nil
+func parseRange(rangeStr string) (Range, error) {
+	parts := strings.Split(rangeStr, "-")
+	if len(parts) != 2 {
+		return Range{}, fmt.Errorf("invalid range format: %s", rangeStr)
 	}
 
-	_, _, err := formatRange(rangeToInsert)
+	start, err := strconv.Atoi(parts[0])
 	if err != nil {
-		return []string{}, err
-	}
-	insertStart, _, _ := formatRange(rangeToInsert)
-
-	low := 0
-	high := len(ranges) - 1
-	insertIdx := len(ranges)
-
-	for low <= high {
-		mid := low + (high-low)/2
-		midStart, _, err := formatRange(ranges[mid])
-		if err != nil {
-			low = mid + 1
-			continue
-		}
-
-		if insertStart <= midStart {
-			insertIdx = mid
-			high = mid - 1
-		} else {
-			low = mid + 1
-		}
+		return Range{}, err
 	}
 
-	result := make([]string, 0, len(ranges)+1)
-	result = append(result, ranges[:insertIdx]...)
-	result = append(result, rangeToInsert)
-	result = append(result, ranges[insertIdx:]...)
+	end, err := strconv.Atoi(parts[1])
+	if err != nil {
+		return Range{}, err
+	}
 
-	return result, nil
+	return Range{Start: start, End: end}, nil
 }
 
-func sortedInsertId(ids []string, idToInsert string) ([]string, error) {
-	if len(ids) == 0 {
-		return []string{idToInsert}, nil
-	}
-
-	insertId, err := strconv.Atoi(idToInsert)
-	if err != nil {
-		return []string{}, err
-	}
-
-	low := 0
-	high := len(ids) - 1
-	insertIdx := len(ids)
-
-	for low <= high {
-		mid := low + (high-low)/2
-
-		midId, err := strconv.Atoi(ids[mid])
-		if err != nil {
-			low = mid + 1
-			continue
-		}
-
-		if insertId <= midId {
-			insertIdx = mid
-			high = mid - 1
-		} else {
-			low = mid + 1
-		}
-	}
-
-	result := make([]string, 0, len(ids)+1)
-	result = append(result, ids[:insertIdx]...)
-	result = append(result, idToInsert)
-	result = append(result, ids[insertIdx:]...)
-
-	return result, nil
-}
-
-func findInRanges(ranges []string, idStr string) bool {
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		return false
-	}
-	for _, rangeStr := range ranges {
-		startRange, endRange, err := formatRange(rangeStr)
-		if err != nil {
-			continue
-		}
-
-		if id < startRange {
-			continue
-		}
-		if id > endRange {
-			continue
-		}
-
-		if startRange <= id && id <= endRange {
+func isIDInRanges(ranges []Range, id int) bool {
+	for _, r := range ranges {
+		if id >= r.Start && id <= r.End {
 			return true
 		}
 	}
@@ -142,38 +53,31 @@ func Day5Part1() {
 	}
 	defer file.Close()
 
+	var ranges []Range
+	var ids []int
+	isRangeSection := true
+
 	scanner := bufio.NewScanner(file)
-
-	freshCount := 0
-	rangesList := make([]string, 0)
-	idsList := make([]string, 0)
-
-	isRange := true
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 		if line == "" {
-			isRange = false
+			isRangeSection = false
 			continue
 		}
-		if isRange {
-			rangesList, err = sortedInsertRange(rangesList, line)
+		if isRangeSection {
+			r, err := parseRange(line)
 			if err != nil {
-				fmt.Printf("Error: %v\n", err)
+				fmt.Printf("Error parsing range: %v\n", err)
 				os.Exit(1)
 			}
+			ranges = append(ranges, r)
 		} else {
-			idsList, err = sortedInsertId(idsList, line)
+			id, err := strconv.Atoi(line)
 			if err != nil {
-				fmt.Printf("Error: %v\n", err)
+				fmt.Printf("Error parsing ID: %v\n", err)
 				os.Exit(1)
 			}
-		}
-	}
-
-	for _, idStr := range idsList {
-		found := findInRanges(rangesList, idStr)
-		if found {
-			freshCount++
+			ids = append(ids, id)
 		}
 	}
 
@@ -182,5 +86,16 @@ func Day5Part1() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Solution: %d\n", freshCount)
+	sort.Slice(ranges, func(i, j int) bool {
+		return ranges[i].Start < ranges[j].Start
+	})
+
+	count := 0
+	for _, id := range ids {
+		if isIDInRanges(ranges, id) {
+			count++
+		}
+	}
+
+	fmt.Printf("Solution: %d\n", count)
 }

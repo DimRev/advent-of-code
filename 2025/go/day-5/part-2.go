@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -12,121 +13,60 @@ const (
 	FILE_PATH_P2 = "../inputs/day-5/part-1/input.txt"
 )
 
-func formatRangeP2(rangeStr string) (startRange, endRange int, err error) {
-	split := strings.Split(rangeStr, "-")
-	if len(split) != 2 {
-		err = fmt.Errorf("invalid range format: %s", rangeStr)
-		return
-	}
-
-	startRange, err = strconv.Atoi(split[0])
-	if err != nil {
-		return
-	}
-
-	endRange, err = strconv.Atoi(split[1])
-	if err != nil {
-		return
-	}
-	return startRange, endRange, nil
+type RangeP2 struct {
+	Start, End int
 }
 
-func sortedInsertRangeP2(ranges []string, rangeToInsert string) ([]string, error) {
-	if len(ranges) == 0 {
-		return []string{rangeToInsert}, nil
+func parseRangeP2(rangeStr string) (RangeP2, error) {
+	parts := strings.Split(rangeStr, "-")
+	if len(parts) != 2 {
+		return RangeP2{}, fmt.Errorf("invalid range format: %s", rangeStr)
 	}
 
-	_, _, err := formatRangeP2(rangeToInsert)
+	start, err := strconv.Atoi(parts[0])
 	if err != nil {
-		return []string{}, err
-	}
-	insertStart, _, _ := formatRangeP2(rangeToInsert)
-
-	low := 0
-	high := len(ranges) - 1
-	insertIdx := len(ranges)
-
-	for low <= high {
-		mid := low + (high-low)/2
-		midStart, _, err := formatRangeP2(ranges[mid])
-		if err != nil {
-			low = mid + 1
-			continue
-		}
-
-		if insertStart <= midStart {
-			insertIdx = mid
-			high = mid - 1
-		} else {
-			low = mid + 1
-		}
+		return RangeP2{}, err
 	}
 
-	result := make([]string, 0, len(ranges)+1)
-	result = append(result, ranges[:insertIdx]...)
-	result = append(result, rangeToInsert)
-	result = append(result, ranges[insertIdx:]...)
+	end, err := strconv.Atoi(parts[1])
+	if err != nil {
+		return RangeP2{}, err
+	}
 
-	return result, nil
+	return RangeP2{Start: start, End: end}, nil
 }
 
-func squashRangesP2(ranges []string) ([]string, error) {
+func squashRanges(ranges []RangeP2) []RangeP2 {
 	if len(ranges) == 0 {
-		return ranges, nil
+		return ranges
 	}
 
-	type rangeData struct {
-		start int
-		end   int
-	}
+	sort.Slice(ranges, func(i, j int) bool {
+		return ranges[i].Start < ranges[j].Start
+	})
 
-	parsedRanges := make([]rangeData, 0, len(ranges))
-	for _, rangeStr := range ranges {
-		start, end, err := formatRangeP2(rangeStr)
-		if err != nil {
-			return nil, err
-		}
-		parsedRanges = append(parsedRanges, rangeData{start: start, end: end})
-	}
+	result := []RangeP2{ranges[0]}
 
-	result := make([]rangeData, 0)
-	for _, r := range parsedRanges {
-		if len(result) == 0 {
-			result = append(result, r)
-			continue
-		}
-
-		lastIdx := len(result) - 1
-		if r.start <= result[lastIdx].end+1 {
-			if r.end > result[lastIdx].end {
-				result[lastIdx].end = r.end
+	for _, r := range ranges[1:] {
+		last := &result[len(result)-1]
+		if r.Start <= last.End+1 {
+			if r.End > last.End {
+				last.End = r.End
 			}
 		} else {
 			result = append(result, r)
 		}
 	}
 
-	squashed := make([]string, 0, len(result))
-	for _, r := range result {
-		squashed = append(squashed, fmt.Sprintf("%d-%d", r.start, r.end))
-	}
-
-	return squashed, nil
+	return result
 }
 
-func checkTotalIdsInRanges(ranges []string) int {
-	totalCount := 0
-
-	for _, rangeStr := range ranges {
-		startRange, endRange, err := formatRangeP2(rangeStr)
-		if err != nil {
-			continue
-		}
-		count := endRange - startRange + 1
-		totalCount += count
+func countTotalIDs(ranges []RangeP2) int {
+	total := 0
+	for _, r := range ranges {
+		total += r.End - r.Start + 1
 	}
-
-	return totalCount
+	return total
 }
 
 func Day5Part2() {
@@ -137,32 +77,29 @@ func Day5Part2() {
 	}
 	defer file.Close()
 
+	var ranges []RangeP2
 	scanner := bufio.NewScanner(file)
-
-	rangesList := make([]string, 0)
 
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 		if line == "" {
 			break
 		}
-		rangesList, err = sortedInsertRangeP2(rangesList, line)
+		r, err := parseRangeP2(line)
 		if err != nil {
-			fmt.Printf("Error: %v\n", err)
+			fmt.Printf("Error parsing range: %v\n", err)
 			os.Exit(1)
 		}
+		ranges = append(ranges, r)
 	}
-	squashed, err := squashRangesP2(rangesList)
-	if err != nil {
-		fmt.Printf("Error squashing ranges: %v\n", err)
-		os.Exit(1)
-	}
-	freshCount := checkTotalIdsInRanges(squashed)
 
 	if err := scanner.Err(); err != nil {
 		fmt.Printf("Error reading file: %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Printf("Solution: %d\n", freshCount)
+	squashed := squashRanges(ranges)
+	totalCount := countTotalIDs(squashed)
+
+	fmt.Printf("Solution: %d\n", totalCount)
 }
