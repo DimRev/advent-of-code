@@ -11,6 +11,7 @@ import (
 	day4 "github.com/DimRev/advent-of-code/day-4"
 	day5 "github.com/DimRev/advent-of-code/day-5"
 	day6 "github.com/DimRev/advent-of-code/day-6"
+	day7 "github.com/DimRev/advent-of-code/day-7"
 	"github.com/DimRev/advent-of-code/lib"
 )
 
@@ -34,6 +35,9 @@ const (
 
 	D6P1 Command = "d6p1"
 	D6P2 Command = "d6p2"
+
+	D7P1 Command = "d7p1"
+	D7P2 Command = "d7p2"
 )
 
 var commands = []Command{D1P1, D1P2}
@@ -56,6 +60,9 @@ var cmdMap = map[Command]func(){
 
 	D6P1: day6.Day6Part1,
 	D6P2: day6.Day6Part2,
+
+	D7P1: day7.Day7Part1,
+	D7P2: day7.Day7Part2,
 }
 
 func main() {
