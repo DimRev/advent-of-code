@@ -89,8 +89,17 @@ python-d7p2:
 	$(call print_py_title,Day 7 Part 2)
 	@cd 2025/python && python main.py d7p2
 
+# Day 8
+python-d8p1:
+	$(call print_py_title,Day 8 Part 1)
+	@cd 2025/python && python main.py d8p1
+
+python-d8p2:
+	$(call print_py_title,Day 8 Part 2)
+	@cd 2025/python && python main.py d8p2
+
 # All Days
-python-all: python-d1p1 python-d1p2 python-d2p1 python-d2p2 python-d3p1 python-d3p2 python-d4p1 python-d4p2 python-d5p1 python-d5p2 python-d6p1 python-d6p2 python-d7p1 python-d7p2
+python-all: python-d1p1 python-d1p2 python-d2p1 python-d2p2 python-d3p1 python-d3p2 python-d4p1 python-d4p2 python-d5p1 python-d5p2 python-d6p1 python-d6p2 python-d7p1 python-d7p2 python-d8p1 python-d8p2
 
 #MARK: GO
 # Day 1
@@ -156,8 +165,17 @@ go-d7p2:
 	$(call print_go_title,Day 7 Part 2)
 	@cd 2025/go && go run main.go d7p2
 
+# Day 8
+go-d8p1:
+	$(call print_go_title,Day 8 Part 1)
+	@cd 2025/go && go run main.go d8p1
+
+go-d8p2:
+	$(call print_go_title,Day 8 Part 2)
+	@cd 2025/go && go run main.go d8p2
+
 # All Days
-go-all: go-d1p1 go-d1p2 go-d2p1 go-d2p2 go-d3p1 go-d3p2 go-d4p1 go-d4p2 go-d5p1 go-d5p2 go-d6p1 go-d6p2 go-d7p1 go-d7p2
+go-all: go-d1p1 go-d1p2 go-d2p1 go-d2p2 go-d3p1 go-d3p2 go-d4p1 go-d4p2 go-d5p1 go-d5p2 go-d6p1 go-d6p2 go-d7p1 go-d7p2 go-d8p1 go-d8p2
 
 #MARK: TYPESCRIPT
 # Day 1
@@ -223,8 +241,17 @@ ts-d7p2:
 	$(call print_ts_title,Day 7 Part 2)
 	@cd 2025/ts && pnpm start d7p2
 
+# Day 8
+ts-d8p1:
+	$(call print_ts_title,Day 8 Part 1)
+	@cd 2025/ts && pnpm start d8p1
+
+ts-d8p2:
+	$(call print_ts_title,Day 8 Part 2)
+	@cd 2025/ts && pnpm start d8p2
+
 # All Days
-ts-all: ts-d1p1 ts-d1p2 ts-d2p1 ts-d2p2 ts-d3p1 ts-d3p2 ts-d4p1 ts-d4p2 ts-d5p1 ts-d5p2 ts-d6p1 ts-d6p2 ts-d7p1 ts-d7p2
+ts-all: ts-d1p1 ts-d1p2 ts-d2p1 ts-d2p2 ts-d3p1 ts-d3p2 ts-d4p1 ts-d4p2 ts-d5p1 ts-d5p2 ts-d6p1 ts-d6p2 ts-d7p1 ts-d7p2 ts-d8p1 ts-d8p2
 
 #MARK: RENDER
 render-render:
@@ -268,6 +295,11 @@ all-d6: render-init go-d6p1 go-d6p2 python-d6p1 python-d6p2 ts-d6p1 ts-d6p2 rend
 all-d7p1: render-init go-d7p1 python-d7p1 ts-d7p1 render-render
 all-d7p2: render-init go-d7p2 python-d7p2 ts-d7p2 render-render
 all-d7: render-init go-d7p1 go-d7p2 python-d7p1 python-d7p2 ts-d7p1 ts-d7p2 render-render
+
+# Day 8
+all-d8p1: render-init go-d8p1 python-d8p1 ts-d8p1 render-render
+all-d8p2: render-init go-d8p2 python-d8p2 ts-d8p2 render-render
+all-d8: render-init go-d8p1 go-d8p2 python-d8p1 python-d8p2 ts-d8p1 ts-d8p2 render-render
 
 # All Days
 all-all: render-init go-all python-all ts-all render-render
