@@ -1,0 +1,1 @@
+FILE_PATH = "../inputs/day-7/part-1/input.txt"
