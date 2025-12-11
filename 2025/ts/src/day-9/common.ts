@@ -1,0 +1,1 @@
+export const PATH = "../inputs/day-9/part-1/example.txt";
